@@ -1,0 +1,1 @@
+SELECT * FROM KPU_CATAL kc ; 
