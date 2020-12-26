@@ -180,3 +180,35 @@ UPDATE ZEM
 	
 
 	
+	
+	-- Update to NULL  Update to NULL  Update to NULL  Update to NULL
+	-- Update to NULL  Update to NULL  Update to NULL  Update to NULL
+	
+	-- Надо обнулить
+	SELECT  sum(POSEV), sum(ZERNO), sum(kukuruza), sum(semena_masl), sum(semena_pods), 
+			sum(ovoshi), sum(KAPUSTA), sum(OGURCY), sum(BAKLAZHAN), sum(POMIDOR), sum(TYKVA),
+			sum(morkov), sum(chesnok), sum(LUK), sum(SVEKLA_STOL), sum(KARTOFEL), sum(SOLOMA), sum(KORM_SENO)
+		FROM ZEM;
+	
+	UPDATE ZEM
+		SET POSEV = NULL,
+		ZERNO = NULL,
+		KUKURUZA = NULL,
+		SEMENA_MASL = NULL,
+		SEMENA_PODS = NULL,
+		OVOSHI = NULL,
+		KAPUSTA = NULL,
+		OGURCY = NULL,
+		BAKLAZHAN = NULL,
+		POMIDOR = NULL,
+		TYKVA = NULL,
+		MORKOV = NULL,
+		CHESNOK = NULL,
+		LUK = NULL,
+		SVEKLA_STOL = NULL,
+		KARTOFEL = NULL,
+		SOLOMA = NULL,
+		KORM_SENO = NULL;
+	
+	
+	
