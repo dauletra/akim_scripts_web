@@ -1,3 +1,7 @@
+SELECT count(*)
+	FROM ZEM
+	WHERE ID_CATAL IN (SELECT id FROM KPU_CATAL);
+
 SELECT 	sum(VSEGO), sum(postroyki), sum(PASHNYA), sum(SADY), sum(POSEV),
 		sum(OVOSHI), sum(LUK), sum(MNOGOLETNIE), sum(KORM_SENO), sum(SOLOMA)
 	FROM zem
@@ -85,7 +89,15 @@ UPDATE ZEM
 	SET POSEV = COALESCE(ZERNO, 0) + COALESCE(SEMENA_MASL, 0) + COALESCE(SOLOMA, 0) + COALESCE(OVOSHI, 0) 
 	WHERE ID_CATAL IN (SELECT id FROM KPU_CATAL);
 
+-- Огороды бар уйлердин саны
+SELECT count(*)
+	FROM ZEM
+	WHERE ID_CATAL IN (SELECT id FROM KPU_CATAL) AND 
+		pashnya > 0;
 
+
+	
+	
 -- Зерновые
 -- ZERNO
 UPDATE ZEM
@@ -98,6 +110,8 @@ SELECT count(*) FROM ZEM
 UPDATE ZEM
 	SET KUKURUZA = COALESCE(KUKURUZA, 0) + 100
 	WHERE ID_CATAL IN (SELECT id FROM KPU_CATAL) AND pashnya > 200 ROWS 200;
+
+
 
 
 -- Культуры масличные
@@ -114,6 +128,9 @@ UPDATE ZEM
 	WHERE ID_CATAL IN (SELECT id FROM KPU_CATAL) AND pashnya > 300 ROWS 100;
 
 
+
+
+
 -- Культуры кормовые
 -- SOLOMA
 UPDATE ZEM
@@ -125,14 +142,17 @@ SELECT sum(korm_seno) FROM zem
 
 SELECT count(*) FROM ZEM
 	WHERE ID_CATAL IN (SELECT id FROM KPU_CATAL) AND 
-	pashnya > posev + 100;
+		(pashnya - posev - COALESCE(korm_seno, 0)) > 320;
 
 UPDATE ZEM
-	SET KORM_SENO = COALESCE(KORM_SENO, 0) + 100
+	SET KORM_SENO = COALESCE(KORM_SENO, 0) + 320
 	WHERE ID_CATAL IN (SELECT id FROM KPU_CATAL) AND 
-	pashnya > posev + 100 ROWS 520;
+		(pashnya-posev-COALESCE(korm_seno, 0)) > 320 ROWS 1000;
 
 
+	
+	
+	
 -- Овощи
 -- OVOSHI
 UPDATE ZEM
@@ -147,36 +167,44 @@ SELECT sum(OVOSHI) AS "ovoshi", sum(KAPUSTA) AS "kapusta", sum(OGURCY) AS "ogurc
 
 
 SELECT count(*) FROM ZEM
-	WHERE ID_CATAL IN (SELECT id FROM KPU_CATAL) AND pashnya > posev + 150;
+	WHERE ID_CATAL IN (SELECT id FROM KPU_CATAL) AND 
+		(pashnya-posev) > 350;
 
 UPDATE zem
-	SET CHESNOK = COALESCE(CHESNOK, 0) + 50,
+	SET BAKLAZHAN = COALESCE(BAKLAZHAN, 0) + 50,
+	POMIDOR = COALESCE(POMIDOR, 0) + 100,
+	TYKVA = COALESCE(TYKVA, 0) + 50,
+	CHESNOK = COALESCE(CHESNOK, 0) + 50,
 	LUK = COALESCE(LUK, 0) + 50,
 	SVEKLA_STOL = COALESCE(SVEKLA_STOL, 0) + 50
 	WHERE ID_CATAL IN (SELECT id FROM KPU_CATAL) AND 
-		pashnya > posev + 150 ROWS 11;
+		(pashnya-posev) > 350 ROWS 200;
 
+
+
+SELECT count(*) FROM ZEM
+	WHERE ID_CATAL IN (SELECT id FROM KPU_CATAL) AND 
+		(pashnya-posev-ovoshi) > 400;
+	
+	
 UPDATE zem 
-	SET CHESNOK = CHESNOK - 5,
-	LUK = LUK - 5,
-	SVEKLA_STOL = SVEKLA_STOL - 5
+	SET OGURCY = COALESCE(OGURCY, 0) + 150,
+	MORKOV = COALESCE(MORKOV, 0) + 150,
+	KAPUSTA = COALESCE(KAPUSTA, 0) + 100
 	WHERE ID_CATAL IN (SELECT id FROM KPU_CATAL) AND 
-		chesnok > 10 AND luk > 10 AND svekla_stol > 10 ROWS 1;
+		(pashnya-posev-ovoshi) > 400 ROWS 200;
 
+	
+-- Картофель
+
+SELECT count(*) FROM ZEM
+	WHERE ID_CATAL IN (SELECT id FROM KPU_CATAL) AND 
+		(pashnya-posev-ovoshi-COALESCE(KARTOFEL, 0)) > 100;
+	
 UPDATE ZEM
-	SET POMIDOR = COALESCE(POMIDOR, 0) + 10
-	WHERE ID_CATAL IN (SELECT id FROM KPU_CATAL) AND pashnya > posev + 10 ROWS 100;
-
-
-SELECT count(*)
-	FROM ZEM
+	SET KARTOFEL = COALESCE(KARTOFEL, 0) + 100
 	WHERE ID_CATAL IN (SELECT id FROM KPU_CATAL) AND 
-		pashnya > posev + 1000;
-
-UPDATE ZEM
-	SET svekla_stol = COALESCE(svekla_stol, 0) + 2
-	WHERE ID_CATAL IN (SELECT id FROM KPU_CATAL) AND 
-		pashnya > posev + 100 ROWS 1;
+		(pashnya-posev-ovoshi-COALESCE(KARTOFEL, 0)) > 100 ROWS 500;
 	
 
 	
